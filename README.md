@@ -45,17 +45,19 @@ Copy
 go run main.go
 ```
 Struktur Projek
-
+```
 Copy
 golang_firebase_auth_email_verification/
-├── handlers/           # Berisi handler untuk endpoint API
+├── controller/           # Berisi handler untuk endpoint API
 ├── models/             # Berisi model data
-├── utils/              # Berisi utility functions
+├── repository/
+├── service/              # Berisi utility functions
 ├── main.go             # Entry point aplikasi
 ├── go.mod              # File dependensi Go
 ├── go.sum              # File checksum dependensi Go
 ├── README.md           # Dokumentasi projek
 └── .env                # File environment variable
+```
 Endpoint API
 
 1. Registrasi Pengguna
