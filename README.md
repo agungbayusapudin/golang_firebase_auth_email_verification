@@ -27,18 +27,23 @@ Sebelum menjalankan projek ini, pastikan Anda telah memenuhi persyaratan berikut
    git clone https://github.com/username/golang_firebase_auth_email_verification.git
    cd golang_firebase_auth_email_verification
 Install dependencies menggunakan Go mod:
-bash
+```
 Copy
 go mod download
+```
 Simpan file serviceAccountKey.json dari Firebase Console ke direktori projek.
 Buat file .env di root direktori dan tambahkan konfigurasi berikut:
+```
 env
 Copy
 GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json
+```
 Jalankan aplikasi:
+```
 bash
 Copy
 go run main.go
+```
 Struktur Projek
 
 Copy
@@ -58,53 +63,51 @@ Endpoint API
 Endpoint: POST /register
 
 Request Body:
-
+```
 json
 Copy
 {
   "email": "user@example.com",
   "password": "password123"
 }
+```
 Response:
-
+```
 json
 Copy
 {
   "message": "User registered successfully. Please check your email for verification.",
   "user_id": "abc123"
 }
+```
 2. Verifikasi Email
-
+```
 Endpoint: POST /verify-email
-
+```
 Request Body:
-
+```
 json
 Copy
 {
   "token": "email-verification-token"
 }
+```
 Response:
-
+```
 json
 Copy
 {
   "message": "Email verified successfully."
 }
+```
 Contoh Penggunaan
 
 Registrasi Pengguna:
-bash
+```
 Copy
 curl -X POST http://localhost:8080/register \
 -H "Content-Type: application/json" \
 -d '{"email": "user@example.com", "password": "password123"}'
-Verifikasi Email:
-bash
-Copy
-curl -X POST http://localhost:8080/verify-email \
--H "Content-Type: application/json" \
--d '{"token": "email-verification-token"}'
-Kontribusi
+```
 
 Jika Anda ingin berkontribusi pada projek ini, silakan buka issue atau pull request. Semua kontribusi sangat diterima!
