@@ -64,3 +64,18 @@ func (c *authController) VerifyEmail(ctx echo.Context) error {
 
 	return ctx.JSON(http.StatusOK, "success verify email")
 }
+
+func (c *authController) LoginUsingGoogle(ctx echo.Context) error {
+	idToken := ctx.QueryParam("idToken")
+	if idToken == "" {
+		return ctx.JSON(http.StatusBadRequest, "idToken is required")
+	}
+
+	// login using google
+	token, err := c.authService.LoginUsingGoogle(ctx.Request().Context(), idToken)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return ctx.JSON(http.StatusOK, token)
+
+}

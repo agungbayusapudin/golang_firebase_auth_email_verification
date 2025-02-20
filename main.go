@@ -58,6 +58,7 @@ func main() {
 	router.POST("/auth/login", authController.Login)
 	router.POST("/auth/register", authController.Register)
 	router.GET("/auth/verify-email", authController.VerifyEmail)
+	router.POST("/auth/login-google", authController.LoginUsingGoogle)
 
 	// run server
 	router.Start(":8080")

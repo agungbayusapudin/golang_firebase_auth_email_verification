@@ -18,6 +18,7 @@ type ServiceAuth interface {
 	Login(ctx context.Context, form model.ModelAuth) (string, error)
 	Register(ctx context.Context, form model.ModelAuth) (*auth.UserRecord, error)
 	VerifyEmail(ctx context.Context, token string) error
+	LoginUsingGoogle(ctx context.Context, idToken string) (string, error)
 }
 
 type serviceAuth struct {
@@ -157,4 +158,60 @@ func (s *serviceAuth) VerifyEmail(ctx context.Context, token string) error {
 	fmt.Printf("Successfully verified email for user: %v\n", tokenInfo.UID)
 
 	return nil
+}
+
+func (s *serviceAuth) LoginUsingGoogle(ctx context.Context, idToken string) (string, error) {
+	// define url
+	url := fmt.Sprintf("https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=%s", s.apikeys)
+	payload := map[string]interface{}{
+		"requestUri":          "",
+		"postBody":            "",
+		"returnIdpCredential": true,
+	}
+
+	// convert payload to json
+	jsonPayload, err := json.Marshal(payload)
+	if err != nil {
+		return "", err
+	}
+
+	// create new request
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return "", err
+	}
+	// set header
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		var errResp map[string]interface{}
+		if err := json.NewDecoder(resp.Body).Decode(&errResp); err != nil {
+			return "", fmt.Errorf("failid to decode response body: %v", err)
+		}
+		return "", fmt.Errorf("failid to login: %v", errResp)
+	}
+
+	// decode response body
+	var result map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", err
+	}
+
+	// get id token
+	idToken, ok := result["idToken"].(string)
+	if !ok {
+		return "", fmt.Errorf("invalid id token")
+	}
+
+	return idToken, nil
+
 }
